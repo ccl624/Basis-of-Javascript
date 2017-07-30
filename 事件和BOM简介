@@ -1,0 +1,108 @@
+回顾第二十天的内容:
+ * 概念
+   * 事件 - 实现用户与页面之间的交互
+   * 简单描述 - 实现用户操作页面，事件完成对应的逻辑
+ * 事件绑定
+   * 事件属性 - HTML页面标签提供一系列的事件属性
+     * 问题 - HTML页面的结构与行为耦合度高
+   * JavaScript事件绑定
+     element.event = function(event){
+         事件的处理逻辑
+     }
+   * 事件监听器
+     * addEventListener(eventName, functionName, boolean)方法 - 其他浏览器
+       * 参数
+         * eventName - 表示绑定的事件名称，例如"click"、"dblclick"等
+         * functionName - 表示事件的处理函数(回调函数)
+           * 形参event - 表示事件对象
+         * boolean - 如果true是捕获节点，如果false是冒泡阶段
+       * 特点 - 为相同标签绑定相同事件多次，正确被触发
+       * 移除事件监听器 - removeEventListener()
+     * attachEvent(eventName, functionName)方法 - IE 8浏览器
+       * 参数
+         * eventName - 表示绑定的事件名称，例如"onclick"、"ondblclick"等
+         * functionName - 表示事件的处理函数(回调函数)
+     * 解决浏览器的兼容问题
+       function bind(elem, eventName, functionName){
+           if(elem.addEventListener){
+               // 表示其他浏览器
+               elem.addEventListener(eventName, functionName);
+           }else{
+               // 表示IE 8浏览器
+               elem.attachEvent('on'+eventName, functionName);
+           }
+       }
+   * 事件对象
+     * 位置 - 事件绑定的底层逻辑代码中(不需要创建，直接使用)
+     * 浏览器兼容问题
+       * 其他浏览器 - event事件对象是作为事件处理函数的形参存在
+       * IE 8浏览器 - event事件对象是作为window对象的属性存在
+       * 兼容解决
+         var event = event || window.event;
+   * 获取目标元素
+     * 浏览器兼容问题
+       * 其他浏览器 - target属性
+       * IE 8浏览器 - srcElement属性
+     * target与this的区别
+       * target - 获取触发当前事件的元素
+       * this - 获取绑定当前事件的元素
+   * 阻止默认行为
+     * 默认行为
+       * <a> - 跳转行为
+       * <form> - 提交行为
+     * 浏览器兼容问题
+       * 其他浏览器 - preventDefault()
+       * IE 8浏览器 - returnValue = false;
+         * 直接调用 return false; - 阻止后面代码的执行
+   * 获取鼠标的坐标值
+     * x和y - 等价于clientX和clientY
+     * clientX和clientY - 相对于窗口
+     * pageX和pageY - 相对于页面
+     * screenX和screenY - 相对于屏幕
+     * offsetX和offsetY - 相对于指定元素
+
+今天的内容:
+ * 事件
+   * 事件的执行周期
+     * 捕获阶段
+     * 触发阶段 - 事件触发
+     * 冒泡阶段 - 一般使用
+   * 阻止事件冒泡
+     * event.stopPropagation() - 其他浏览器
+     * event.cancelBubble = true; - IE 8浏览器
+   * 事件委托
+     * 原本将事件绑定给指定元素，实际上委托给另一个元素，完成事件的绑定和触发
+     * 实现步骤
+       * 将事件绑定给共同的祖先节点
+       * 判断触发事件的元素必须原本的元素
+     * 优势 - 动态向页面添加元素时，不需要重复绑定事件
+ * BOM
+   * window对象
+     * 其他BOM对象和document对象都是window对象的属性
+     * 调用window对象的属性或方法时，可省略"window."
+     * window对象是浏览器中最顶层的对象
+   * navigator对象
+     * 作用 - 用于存储当前浏览器的信息
+     * 属性
+       * userAgent属性 - 1. 判断当前的浏览器产品；2. 判断当前的操作系统
+   * history对象
+     * 浏览器的特点 - 将曾经访问过的页面地址进行存储
+     * 作用 - 用于存储曾经访问过的页面地址(历史列表)
+     * length属性 - 表示当前访问过的页面地址的数量
+     * 方法
+       * back() - 表示向后退到上一个页面
+       * forward() - 表示向前前进下一个页面
+       * go(addr) - 表示跳转到指定页面
+         * go(-1) - 表示后退，等同于back()
+         * go(1) - 表示前进，等同于forward()
+   * location对象
+     * 作用 - 用于存储当前页面的URL信息
+     * URL地址格式
+       http://  192.168.10.165  :80     /day21/index.html
+       网络协议  IP地址          端口号  路径
+       protocol hostname        port    pathname、
+       * host = hostname + port
+       * href = 上面所有内容
+     * 方法
+       * reload()方法 - 表示重新加载当前页面(浏览器中的 F5)
+   * 
